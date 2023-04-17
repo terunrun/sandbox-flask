@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Template</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <script src="/static/js/common.js"></script>
+</head>
+<body>
+    <form action="{{ url_for('complete') }}" method="POST">
+        <label for="project_name">プロジェクト名：{{ project_name }}</label>
+        <label for="members">アサインメンバー：{{ members }}</label>
+        <input type="hidden" name="project_name" value={{ project_name }}><br>
+        <input type="hidden" name="members" value={{ members }}>
+        <br>
+        <input type="submit" value="確定する">
+        <br>
+    </form>
+    <button type="button" onclick="history.back()">戻る</button>
+    <hr/>
+</body>
+</html>

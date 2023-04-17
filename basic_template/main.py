@@ -1,15 +1,57 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, redirect, request, url_for
+
 
 app = Flask(__name__)
 
-@app.route("/")
+
+@app.route("/", methods=["GET"])
 def main():
-    params = {"name": "サンプル１", "age": 20}
-    # return render_template("main.html")
-    users = [ "Yamada", "サンプル", "２" ]
+    print("/ get")
+    return redirect(url_for('input'))
+
+
+@app.route("/input", methods=["GET"])
+def input():
+    print("input get")
+    return render_template('input.html')
+
+
+@app.route("/confirm", methods=["POST"])
+def confirm():
+    print("confirm post")
+    project_name = request.form.get('project_name')
+    members      = request.form.get('members')
+    if not project_name:
+        error_message = "プロジェクト名を入力してください"
+        return render_template(
+            'input.html',
+            project_name=project_name,
+            members=members,
+            error_message=error_message
+        )
+    if not members:
+        error_message = "アサインメンバーを入力してください"
+        return render_template(
+            'input.html',
+            project_name=project_name,
+            members=members,
+            error_message=error_message
+        )
     return render_template(
-        "main.html",
-        name=request.args.get("name", "No Name"), age=request.args.get("age", "-"),
-        params = params,
-        users=users,
-    )
+        'confirm.html',
+        project_name=project_name,
+        members=members)
+
+
+@app.route("/complete", methods=["POST"])
+def complete():
+    if(request.method == 'POST'):
+        print("complete post")
+        project_name = request.form.get('project_name')
+        members      = request.form.get('members')
+        message = f'{project_name}に{members}を追加することに成功しました'
+        return render_template('complete.html', message=message)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
