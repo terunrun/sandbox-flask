@@ -15,6 +15,7 @@
     {% if error_message %}
         <p style="color: red">{{ error_message }}</p>
     {% endif %}
+    プロジェクト名とアサインメンバーを入力してください。
     <form action="{{ url_for('confirm') }}" method="POST">
         <label for="project_name">プロジェクト名：</label><input type="text" name="project_name" value={{ project_name }}><br>
         <label for="members">アサインメンバー：</label><input type="text" name="members" value={{ members }}>　*複数の場合はカンマ区切り<br>

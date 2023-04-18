@@ -9,15 +9,17 @@
     <script src="/static/js/common.js"></script>
 </head>
 <body>
+    以下でよろしいですか？<br/>
+    プロジェクト名：{{ project_name }}<br/>
+    アサインメンバー：{{ members }}
     <form action="{{ url_for('complete') }}" method="POST">
-        <label for="project_name">プロジェクト名：{{ project_name }}</label>
-        <label for="members">アサインメンバー：{{ members }}</label>
         <input type="hidden" name="project_name" value={{ project_name }}><br>
         <input type="hidden" name="members" value={{ members }}>
         <br>
         <input type="submit" value="確定する">
         <br>
     </form>
+    <br/>
     <button type="button" onclick="history.back()">戻る</button>
     <hr/>
 </body>

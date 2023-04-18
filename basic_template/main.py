@@ -22,7 +22,7 @@ def confirm():
     project_name = request.form.get('project_name')
     members      = request.form.get('members')
     if not project_name:
-        error_message = "プロジェクト名を入力してください"
+        error_message = "プロジェクト名は必ず入力してください"
         return render_template(
             'input.html',
             project_name=project_name,
@@ -30,7 +30,7 @@ def confirm():
             error_message=error_message
         )
     if not members:
-        error_message = "アサインメンバーを入力してください"
+        error_message = "アサインメンバーは必ず入力してください"
         return render_template(
             'input.html',
             project_name=project_name,
@@ -53,5 +53,5 @@ def complete():
         return render_template('complete.html', message=message)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     app.run(host="0.0.0.0", port=5000, debug=True)
