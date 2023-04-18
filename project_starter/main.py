@@ -1,7 +1,6 @@
 import os
 import time
 from flask import Flask, render_template, request
-# from google.cloud import storage
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -16,16 +15,6 @@ SCOPES = [
 ]
 
 app = Flask(__name__)
-
-
-# def create_cloud_storage_buckets(project_name):
-#     storage_client = storage.Client(project_name)
-#     storage_client.create_bucket(f"{project_name}-flask-app")
-
-# def list_cloud_storage_buckets(project_name):
-#     storage_client = storage.Client(project_name)
-#     buckets = storage_client.list_buckets()
-#     return buckets
 
 
 def create_gws_group(creds, group_address, group_name):
@@ -230,11 +219,6 @@ def main():
 
         print(f"Start process: {project_name}")
         members = members.split(",")
-        # try:
-        #     create_cloud_storage_buckets(project_name)
-        # except Exception as e:
-        #     return render_template("main.html", error_message=e)
-        # buckets = list_cloud_storage_buckets(project_name)
         try:
             group = create_gws_group(creds, project_name, project_name)
         except Exception as e:
