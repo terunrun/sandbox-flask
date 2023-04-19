@@ -1,12 +1,10 @@
+import os
 from flask import Flask, render_template, redirect, request, url_for
 from google.cloud import storage
-
-import os
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 app = Flask(__name__)
 
@@ -59,27 +57,27 @@ def complete():
 
 @app.route("/api", methods=["GET", "POST"])
 def api():
-    if(request.method == 'GET'):
+    if(request.method == 'POST'):
         return render_template('api.html')
+    return render_template('api.html')
 
 @app.route("/api_gcs", methods=["POST"])
 def api_gcs():
-    if(request.method == 'POST'):
-        print("api_gcs post")
-        bucket_name = request.form.get('bucket_name')
-        if not bucket_name:
-            error_message = "バケット名は必ず入力してください"
-            return render_template(
-                'api.html',
-                error_message=error_message
-            )
-        storage_client = storage.Client()
-        storage_client.create_bucket(f"sandbox-terunrun-dev-{bucket_name}")
-        buckets = storage_client.list_buckets()
+    print("api_gcs post")
+    bucket_name = request.form.get('bucket_name')
+    if not bucket_name:
+        error_message = "バケット名は必ず入力してください"
         return render_template(
             'api.html',
-            results=buckets,
+            error_message=error_message
         )
+    storage_client = storage.Client()
+    storage_client.create_bucket(f"sandbox-terunrun-dev-{bucket_name}")
+    buckets = storage_client.list_buckets()
+    return render_template(
+        'api.html',
+        results=buckets,
+    )
 
 SCOPES = [
     'https://www.googleapis.com/auth/drive'
@@ -107,6 +105,7 @@ def create_gws_drive(creds, drive_id, drive_name):
         return drive
     except Exception as error:
         print(f'An error occurred: {error}')
+        return error
 
 def get_drive_contents_list(creds, drive_id):
     try:
@@ -128,7 +127,7 @@ def get_drive_contents_list(creds, drive_id):
             items = results.get("files", [])
             if not items:
                 print("No files found.")
-                return
+                return None
             for item in items:
                 if not item["trashed"]:
                     item_list.append([
@@ -148,36 +147,36 @@ def get_drive_contents_list(creds, drive_id):
         return item_list_sorted
     except Exception as error:
         print(f'An error occurred: {error}')
+        return error
 
 @app.route("/api_gws", methods=["POST"])
 def api_gws():
-    if(request.method == 'POST'):
-        print("api_gws post")
-        folder_name = request.form.get('folder_name')
-        if not folder_name:
-            error_message = "フォルダ名は必ず入力してください"
-            return render_template(
-                'api.html',
-                error_message=error_message
-            )
-        creds = None
-        if os.path.exists('token.json'):
-            creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', SCOPES)
-                creds = flow.run_local_server(port=0)
-            with open('token.json', 'w') as token:
-                token.write(creds.to_json())
-        drive = create_gws_drive(creds, '', folder_name)
-        contents = get_drive_contents_list(creds, drive['id'])
+    print("api_gws post")
+    folder_name = request.form.get('folder_name')
+    if not folder_name:
+        error_message = "フォルダ名は必ず入力してください"
         return render_template(
             'api.html',
-            results=contents,
+            error_message=error_message
         )
+    creds = None
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        with open('token.json', 'w', encoding='utf-8') as token:
+            token.write(creds.to_json())
+    drive = create_gws_drive(creds, '', folder_name)
+    contents = get_drive_contents_list(creds, drive['id'])
+    return render_template(
+        'api.html',
+        results=contents,
+    )
 
 
 if __name__ == "__main__":  # pragma: no cover
