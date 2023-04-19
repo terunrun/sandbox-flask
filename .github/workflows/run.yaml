@@ -28,7 +28,7 @@ jobs:
       - name: Run tests
         # env:
         #   PROJECT_HOME: /home/runner/work/repository_name/repository_name
-          GOOGLE_APPLICATION_CREDENTIALS: ""
+          GOOGLE_APPLICATION_CREDENTIALS:
         run: |
           pytest -v --cov --cov-report=term-missing
         # continue-on-error: true
