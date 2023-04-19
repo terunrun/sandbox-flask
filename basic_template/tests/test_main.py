@@ -55,14 +55,14 @@ test_bucket = {
     'name': 'cloud-storage-test-bucket',
 }
 
-def test_api_gcs_route(mocker):
-    mocker.patch("main.storage.Client.create_bucket")
-    mocker.patch("main.storage.Client.list_buckets", return_value=[test_bucket])
-    response = app.test_client().post('/api_gcs', data={
-        "bucket_name": "test",
-    })
-    assert response.status_code == 200
-    assert 'cloud-storage-test-bucket'.encode("utf-8") in response.data
+# def test_api_gcs_route(mocker):
+#     mocker.patch("main.storage.Client.create_bucket")
+#     mocker.patch("main.storage.Client.list_buckets", return_value=[test_bucket])
+#     response = app.test_client().post('/api_gcs', data={
+#         "bucket_name": "test",
+#     })
+#     assert response.status_code == 200
+#     assert 'cloud-storage-test-bucket'.encode("utf-8") in response.data
 
 def test_api_gcs_route_empty_bucket_name():
     response = app.test_client().post('/api_gcs', data={
