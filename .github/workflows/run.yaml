@@ -7,17 +7,9 @@ jobs:
     # runs-on: ubuntu-latest
     runs-on: ubuntu-20.04
     steps:
+      # ソースコードチェックアウト
       - name: Check out repository code
         uses: actions/checkout@v3
-
-      - name: List files in the repository
-        run: |
-          ls
-
-      - name: List files in the repository
-        run: |
-          ls
-        working-directory: ./basic_template
 
       # Pythonセットアップ
       - name: Set up Python
@@ -32,6 +24,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         working-directory: ./basic_template
 
+      # テスト実行
       - name: Run tests
         # env:
         #   PROJECT_HOME: /home/runner/work/repository_name/repository_name
@@ -39,4 +32,5 @@ jobs:
           pytest -v --cov --cov-report=term-missing
         # continue-on-error: true
 
+      # 終了
       - run: echo "This job's status is ${{ job.status }}."
