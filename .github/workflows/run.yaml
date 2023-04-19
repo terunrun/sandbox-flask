@@ -4,7 +4,8 @@ name: Pytest
 on: [push]
 jobs:
   Pytest-in-GitHub-Actions:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
