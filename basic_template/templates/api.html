@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Template</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <script src="/static/js/common.js"></script>
+</head>
+<body>
+    {% if message %}
+        <p style="color: black">{{ message }}</p>
+    {% endif %}
+    {% if error_message %}
+        <p style="color: red">{{ error_message }}</p>
+    {% endif %}
+    <p>バケット名を入力してください。</p>
+    <br/>
+    <form action="{{ url_for('api_gcs') }}" method="POST">
+        <label for="bucket_name">バケット名：</label><input type="text" name="bucket_name" value={{ bucket_name }}><br>
+        <input type="submit" value="バケット作成">
+    </form>
+    <br/>
+    <hr/>
+    <p>フォルダ名を入力してください。</p>
+    <br/>
+    <form action="{{ url_for('api_gws') }}" method="POST">
+        <label for="folder_name">フォルダ名：</label><input type="text" name="folder_name" value={{ folder_name }}><br>
+        <input type="submit" value="フォルダ作成">
+    </form>
+    <br/>
+    <hr/>
+    {% for result in results %}
+        <div>{{ result }}</div>
+    {% endfor %}
+</body>
+</html>

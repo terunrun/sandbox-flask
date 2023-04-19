@@ -1,4 +1,3 @@
-import pytest
 from main import app
 
 def test_main_route():
@@ -44,3 +43,62 @@ def test_complete_route():
     })
     assert response.status_code == 200
     assert 'testにtest1,test2を追加することに成功しました'.encode("utf-8") in response.data
+
+def test_api_route():
+    response = app.test_client().get('/api')
+    assert response.status_code == 200
+    assert 'バケット名を入力してください。'.encode("utf-8") in response.data
+
+
+test_bucket = {
+    'id': '1a2b3c4d5e6f7g8h9i0j1a2b3c4d5e6f7',
+    'name': 'cloud-storage-test-bucket',
+}
+
+def test_api_gcs_route(mocker):
+    mocker.patch("main.storage.Client.create_bucket")
+    mocker.patch("main.storage.Client.list_buckets", return_value=[test_bucket])
+    response = app.test_client().post('/api_gcs', data={
+        "bucket_name": "test",
+    })
+    assert response.status_code == 200
+    assert 'cloud-storage-test-bucket'.encode("utf-8") in response.data
+
+def test_api_gcs_route_empty_bucket_name():
+    response = app.test_client().post('/api_gcs', data={
+        "bucket_name": "",
+    })
+    assert response.status_code == 200
+    assert 'バケット名は必ず入力してください'.encode("utf-8") in response.data
+
+
+test_folder = {
+    'kind': 'drive#file',
+    'id': '1a2b3c4d5e6f7g8h9i0j1a2b3c4d5e6f7',
+    'name': 'gws-test-folder',
+    'mimeType': 'application/vnd.google-apps.folder'
+}
+test_folder2 = {
+    'kind': 'drive#file',
+    'id': '1a2b3c4d5e6f7g8h9i0j1a2b3c4d5e6f7',
+    'name': 'gws-test-folder2',
+    'mimeType': 'application/vnd.google-apps.folder'
+}
+test_folders = [test_folder, test_folder2]
+
+def test_api_gws_route(mocker):
+    mocker.patch("main.create_gws_drive", return_value=test_folder)
+    mocker.patch("main.get_drive_contents_list", return_value=test_folders)
+    response = app.test_client().post('/api_gws', data={
+        "folder_name": "test",
+    })
+    assert response.status_code == 200
+    assert 'gws-test-folder'.encode("utf-8") in response.data
+    assert 'gws-test-folder2'.encode("utf-8") in response.data
+
+def test_api_gws_route_empty_foleder_name():
+    response = app.test_client().post('/api_gws', data={
+        "folder_name": "",
+    })
+    assert response.status_code == 200
+    assert 'フォルダ名は必ず入力してください'.encode("utf-8") in response.data
