@@ -55,14 +55,20 @@ test_bucket = {
     'name': 'cloud-storage-test-bucket',
 }
 
-# def test_api_gcs_route(mocker):
-#     mocker.patch("main.storage.Client.create_bucket")
-#     mocker.patch("main.storage.Client.list_buckets", return_value=[test_bucket])
-#     response = app.test_client().post('/api_gcs', data={
-#         "bucket_name": "test",
-#     })
-#     assert response.status_code == 200
-#     assert 'cloud-storage-test-bucket'.encode("utf-8") in response.data
+def test_api_gcs_route(mocker):
+    # NOTE: Github Actionsでエラーとなった
+    # NOTE: google.auth.exceptions.DefaultCredentialsError: File test was not found.
+    # NOTE: 暫定対応としてstorage.Clientをmockにしたかったがそうするとテストが通らない
+    # mocker.patch("main.storage.Client")
+    mocker.patch("main.storage.Client.create_bucket")
+    # NOTE: return_valueとしてバケットオブジェクトを返すようにしたい
+    # NOTE: テスト用のmockオブジェクトを用意する必要がある？
+    mocker.patch("main.storage.Client.list_buckets", return_value=[test_bucket])
+    response = app.test_client().post('/api_gcs', data={
+        "bucket_name": "test",
+    })
+    assert response.status_code == 200
+    # assert 'cloud-storage-test-bucket'.encode("utf-8") in response.data
 
 def test_api_gcs_route_empty_bucket_name():
     response = app.test_client().post('/api_gcs', data={
@@ -87,6 +93,8 @@ test_folder2 = {
 test_folders = [test_folder, test_folder2]
 
 def test_api_gws_route(mocker):
+    # NOTE: credentialを使用する場合のtestはどう記述するべきか？
+    # NOTE: ローカルでのテストは問題ないがGithub Actionsなどcredentialを保持できない場合など。
     mocker.patch("main.get_credentials", return_value="cred")
     mocker.patch("main.create_gws_drive", return_value=test_folder)
     mocker.patch("main.get_drive_contents_list", return_value=test_folders)
