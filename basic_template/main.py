@@ -87,6 +87,21 @@ file_fields = [
     'modifiedTime', 'webContentLink', 'webViewLink'
 ]
 
+def get_credentials():
+    creds = None
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        with open('token.json', 'w', encoding='utf-8') as token:
+            token.write(creds.to_json())
+    return creds
+
 def create_gws_drive(creds, drive_id, drive_name):
     try:
         service = build('drive', 'v3', credentials=creds)
@@ -159,18 +174,7 @@ def api_gws():
             'api.html',
             error_message=error_message
         )
-    creds = None
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        with open('token.json', 'w', encoding='utf-8') as token:
-            token.write(creds.to_json())
+    creds = get_credentials()
     drive = create_gws_drive(creds, '', folder_name)
     contents = get_drive_contents_list(creds, drive['id'])
     return render_template(

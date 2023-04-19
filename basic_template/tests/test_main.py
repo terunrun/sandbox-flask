@@ -87,6 +87,7 @@ test_folder2 = {
 test_folders = [test_folder, test_folder2]
 
 def test_api_gws_route(mocker):
+    mocker.patch("main.get_credentials", return_value="cred")
     mocker.patch("main.create_gws_drive", return_value=test_folder)
     mocker.patch("main.get_drive_contents_list", return_value=test_folders)
     response = app.test_client().post('/api_gws', data={
