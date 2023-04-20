@@ -95,19 +95,26 @@ test_folders = [test_folder, test_folder2]
 def test_api_gws_route(mocker):
     # NOTE: credentialを使用する場合のtestはどう記述するべきか？
     # NOTE: ローカルでのテストは問題ないがGithub Actionsなどcredentialを保持できない場合など。
-    mocker.patch("main.get_credentials", return_value="cred")
-    mocker.patch("main.create_gws_drive", return_value=test_folder)
-    mocker.patch("main.get_drive_contents_list", return_value=test_folders)
-    response = app.test_client().post('/api_gws', data={
-        "folder_name": "test",
-    })
-    assert response.status_code == 200
-    assert 'gws-test-folder'.encode("utf-8") in response.data
-    assert 'gws-test-folder2'.encode("utf-8") in response.data
+    # mocker.patch("main.get_credentials", return_value="cred")
+    with app.test_client() as client:
+        with client.session_transaction() as session:
+            session['credentials'] = {'key': 'dummy user'}
+            session['folder_name'] = 'test'
+        mocker.patch("main.Credentials", return_value="")
+        mocker.patch("main.create_gws_drive", return_value=test_folder)
+        mocker.patch("main.get_drive_contents_list", return_value=test_folders)
+        response = client.post('/api_gws', data={
+            "folder_name": "test",
+        })
+        assert response.status_code == 200
+        assert 'gws-test-folder'.encode("utf-8") in response.data
+        assert 'gws-test-folder2'.encode("utf-8") in response.data
 
 def test_api_gws_route_empty_foleder_name():
-    response = app.test_client().post('/api_gws', data={
-        "folder_name": "",
-    })
-    assert response.status_code == 200
-    assert 'フォルダ名は必ず入力してください'.encode("utf-8") in response.data
+    with app.test_client() as client:
+        with client.session_transaction() as session:
+            session['credentials'] = 'dummy user'
+            session['folder_name'] = ''
+        response = client.post('/api_gws')
+        assert response.status_code == 200
+        assert 'フォルダ名は必ず入力してください'.encode("utf-8") in response.data

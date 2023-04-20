@@ -25,7 +25,7 @@
     <hr/>
     <p>フォルダ名を入力してください。</p>
     <br/>
-    <form action="{{ url_for('api_gws') }}" method="POST">
+    <form action="{{ url_for('authorize') }}" method="POST">
         <label for="folder_name">フォルダ名：</label><input type="text" name="folder_name" value={{ folder_name }}><br>
         <input type="submit" value="フォルダ作成">
     </form>

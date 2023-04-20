@@ -11,8 +11,13 @@ pip3 install flask
 ### 実行
 ```sh
 export FLASK_APP={アプリ名}
-export FLASK_ENV=development # デバッグモード
+export FLASK_DEBUG=True # デバッグモード
 flask run
+```
+
+Flask.secret_keyの生成
+```sh
+python -c 'import secrets; print(secrets.token_hex())'
 ```
 
 ### 参考
