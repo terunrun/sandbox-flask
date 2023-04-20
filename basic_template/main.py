@@ -15,7 +15,6 @@ def main():
     print("/ get")
     return redirect(url_for('input'))
 
-
 @app.route("/input", methods=["GET"])
 def input():
     return render_template('input.html')
