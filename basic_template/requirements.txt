@@ -1,4 +1,5 @@
 flask
+gunicorn==20.1.0
 
 google-cloud-storage
 google-api-python-client
