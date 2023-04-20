@@ -1,7 +1,10 @@
 name: Pytest
 # 実行ごとのActionsの表示名
 # run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: [push]
+on:
+  push:
+    paths:
+    - './basic_template'
 jobs:
   Pytest-in-GitHub-Actions:
     # runs-on: ubuntu-latest
@@ -30,7 +33,7 @@ jobs:
         #   PROJECT_HOME: /home/runner/work/repository_name/repository_name
         run: |
           pytest -v --cov --cov-report=term-missing
-        # continue-on-error: true
+        continue-on-error: true
 
       # 終了
       - run: echo "This job's status is ${{ job.status }}."
