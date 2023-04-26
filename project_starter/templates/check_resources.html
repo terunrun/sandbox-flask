@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PJ Starter | Check Resources</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <script src="/static/js/sample.js"></script>
+</head>
+<body>
+    {% if error_message %}
+        <p style="color: red">{{error_message}}</p>
+    {% endif %}
+    <hr/>
+    <h3>GWSグループ一覧取得</h3>
+    <form action="{{ url_for('get_gws_group_list') }}" method="POST">
+        <label for="customer_id">GWS顧客ID：</label><input type="text" name="customer_id"><br>
+        <br>
+        <input type="submit" value="GWSグループ一覧取得">
+    </form>
+    <br>
+    <hr/>
+    <h3>GWSフォルダ一覧取得</h3>
+    <form action="{{ url_for('get_gws_drive_list') }}" method="POST">
+        <!-- <label for="drive_id">共有ドライブID：</label><input type="text" name="drive_id"><br> -->
+        <br>
+        <input type="submit" value="GWSフォルダ一覧取得">
+    </form>
+    <br>
+    <hr/>
+    <h3>GoogleCloudプロジェクト一覧取得</h3>
+    <form action="{{ url_for('get_google_cloud_project_list') }}" method="POST">
+        <label for="organization_id">GoogleCloud組織ID：</label><input type="text" name="organization_id"><br>
+        <br>
+        <input type="submit" value="GoogleCloudプロジェクト一覧取得">
+    </form>
+    <hr/>
+    <br/>
+    <button type="button" onclick="history.back()">戻る</button>
+</body>
+</html>

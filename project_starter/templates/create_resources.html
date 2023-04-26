@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PJ Starter | Create Resources</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <script src="/static/js/sample.js"></script>
+</head>
+<body>
+    {% if error_message %}
+        <p style="color: red">{{error_message}}</p>
+    {% endif %}
+    <hr/>
+    <h3>プロジェクトリソース作成</h3>
+    <form action="{{ url_for('project_starter') }}" method="POST">
+        <label for="project_name">プロジェクト名：</label><input type="text" name="project_name"><br>
+        <!-- TODO: フォームを動的に増やして一つずつ入力し、まとめて送信する -->
+        <label for="members">アサインメンバー：</label><input type="text" name="members">　*複数の場合はカンマ区切り<br>
+        <label for="customer_id">GWS顧客ID：</label><input type="text" name="customer_id"><br>
+        <!-- <label for="drive_id">共有ドライブID：</label><input type="text" name="drive_id"><br> -->
+        <label for="organization_id">GoogleCloud組織ID：</label><input type="text" name="organization_id"><br>
+        <label for="folder_id">GoogleCloudフォルダID：</label><input type="text" name="folder_id"><br>
+        <label for="billing_account">GoogleCloud請求アカウントID：</label><input type="text" name="billing_account"><br>
+        <br>
+        <input type="submit" value="作成">
+    </form>
+    <hr/>
+    <br/>
+    <button type="button" onclick="history.back()">戻る</button>
+</body>
+</html>

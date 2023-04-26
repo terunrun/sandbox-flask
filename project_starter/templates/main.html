@@ -4,33 +4,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>PJ Starter | Home</title>
     <link rel="stylesheet" href="/static/css/common.css">
-    <script src="/static/js/common.js"></script>
+    <script src="/static/js/sample.js"></script>
 </head>
 <body>
     {% if message %}
         <p style="color: black">{{message}}</p>
     {% endif %}
-    {% if error_message %}
-        <p style="color: red">{{error_message}}</p>
-    {% endif %}
-    <form action="{{ url_for('main') }}" method="POST">
-        <label for="project_name">プロジェクト名　：</label><input type="text" name="project_name"><br>
-        <!-- TODO: 一つずつ入力してまとめて送信する -->
-        <label for="members">アサインメンバー：</label><input type="text" name="members">　*複数の場合はカンマ区切り<br>
-
-        <label for="organization_id">組織名　：</label><input type="text" name="organization_id"><br>
-        <label for="folder_id">フォルダ名　：</label><input type="text" name="folder_id"><br>
-        <label for="billing_account">請求アカウント　：</label><input type="text" name="billing_account"><br>
-
-        <br>
-        <input type="submit" value="作成">
-    </form>
     <hr/>
-    <!-- <p>CLoud Storage Bucket List</p>
-    {% for bucket in buckets %}
-        <div>{{ bucket.name }}</div>
-    {% endfor %} -->
+    <form action="{{ url_for('create') }}" method="GET">
+        <input type="submit" value="リソース作成">
+    </form>
+    <br>
+    <form action="{{ url_for('check') }}" method="GET">
+        <input type="submit" value="リソース取得">
+    </form>
 </body>
 </html>
