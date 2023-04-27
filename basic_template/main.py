@@ -10,26 +10,33 @@ import google_auth_oauthlib.flow
 app = Flask(__name__)
 app.secret_key = b'{INPUT HERE}'
 
+
 @app.route('/', methods=['GET'])
 def main():
     print('/ get')
     return render_template('main.html')
 
+
 @app.route('/input', methods=['GET'])
 def input():
     return render_template('input.html')
 
+
 @app.route('/confirm', methods=['POST'])
 def confirm():
     print('confirm post')
+    print(request.form)
     project_name = request.form.get('project_name')
     members      = request.form.get('members')
+    option       = request.form.get('option', '')
+    option2       = request.form.get('option2', '')
     if not project_name:
         error_message = 'プロジェクト名は必ず入力してください'
         return render_template(
             'input.html',
             project_name=project_name,
             members=members,
+            option=option,
             error_message=error_message
         )
     if not members:
@@ -38,19 +45,28 @@ def confirm():
             'input.html',
             project_name=project_name,
             members=members,
+            option=option,
             error_message=error_message
         )
     return render_template(
         'confirm.html',
         project_name=project_name,
-        members=members)
+        members=members,
+        option=option,
+        option2=option2
+    )
+
 
 @app.route('/complete', methods=['POST'])
 def complete():
     print('complete post')
+    print(request.form)
     project_name = request.form.get('project_name')
     members      = request.form.get('members')
-    message = f'{project_name}に{members}を追加することに成功しました'
+    option       = request.form.get('option', '')
+    message = f'{project_name}に{members}を追加することに成功しました。'
+    if option:
+        message += f'<p>オプションで{option}がついています。</p>'
     return render_template('complete.html', message=message)
 
 
@@ -102,6 +118,7 @@ file_fields = [
 #             token.write(creds.to_json())
 #     return creds
 
+
 def create_gws_drive(creds, drive_id, drive_name):
     try:
         service = build('drive', 'v3', credentials=creds)
@@ -121,6 +138,7 @@ def create_gws_drive(creds, drive_id, drive_name):
     except Exception as error:
         print(f'An error occurred: {error}')
         return error
+
 
 def get_drive_contents_list(creds, drive_id):
     try:

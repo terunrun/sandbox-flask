@@ -17,10 +17,19 @@
     {% endif %}
     プロジェクト名とアサインメンバーを入力してください。
     <form action="{{ url_for('confirm') }}" method="POST">
-        <label for="project_name">プロジェクト名：</label><input type="text" name="project_name" value={{ project_name }}><br>
-        <label for="members">アサインメンバー：</label><input type="text" name="members" value={{ members }}>　*複数の場合はカンマ区切り<br>
+        <label for="project_name">プロジェクト名：</label><input type="text" name="project_name" value={{ project_name }}><br/>
+        <label for="members">アサインメンバー：</label><input type="text" name="members" value={{ members }}>　*複数の場合はカンマ区切り<br/>
+        <hr>
+        {% if option %}
+            <input type="checkbox" name="option" id="check" checked><label for="check">オプションあり</label><br/>
+        {% else %}
+            <input type="checkbox" name="option" id="check"><label for="check">オプションあり</label><br/>
+        {% endif %}
+        <hr>
+        <input type="radio" name="option2" id="radio1" value="radio_value1" checked><label for="radio1">オプション2あり</label><br/>
+        <input type="radio" name="option2" id="radio2" value="radio_value2"><label for="radio2">オプション2あり</label><br/>
         <input type="submit" value="確認画面へ">
-        <br>
+        <br/>
     </form>
     <hr/>
     <br/>

@@ -18,7 +18,7 @@
     <p>バケット名を入力してください。</p>
     <br/>
     <form action="{{ url_for('api_gcs') }}" method="POST">
-        <label for="bucket_name">バケット名：</label><input type="text" name="bucket_name" value={{ bucket_name }}><br>
+        <label for="bucket_name">バケット名：</label><input type="text" name="bucket_name" value={{ bucket_name }}><br/>
         <input type="submit" value="バケット作成">
     </form>
     <br/>
@@ -26,7 +26,7 @@
     <p>フォルダ名を入力してください。</p>
     <br/>
     <form action="{{ url_for('authorize') }}" method="POST">
-        <label for="folder_name">フォルダ名：</label><input type="text" name="folder_name" value={{ folder_name }}><br>
+        <label for="folder_name">フォルダ名：</label><input type="text" name="folder_name" value={{ folder_name }}><br/>
         <input type="submit" value="フォルダ作成">
     </form>
     <br/>
