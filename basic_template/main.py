@@ -10,22 +10,22 @@ import google_auth_oauthlib.flow
 app = Flask(__name__)
 app.secret_key = b'{INPUT HERE}'
 
-@app.route("/", methods=["GET"])
+@app.route('/', methods=['GET'])
 def main():
-    print("/ get")
+    print('/ get')
     return redirect(url_for('input'))
 
-@app.route("/input", methods=["GET"])
+@app.route('/input', methods=['GET'])
 def input():
     return render_template('input.html')
 
-@app.route("/confirm", methods=["POST"])
+@app.route('/confirm', methods=['POST'])
 def confirm():
-    print("confirm post")
+    print('confirm post')
     project_name = request.form.get('project_name')
     members      = request.form.get('members')
     if not project_name:
-        error_message = "プロジェクト名は必ず入力してください"
+        error_message = 'プロジェクト名は必ず入力してください'
         return render_template(
             'input.html',
             project_name=project_name,
@@ -33,7 +33,7 @@ def confirm():
             error_message=error_message
         )
     if not members:
-        error_message = "アサインメンバーは必ず入力してください"
+        error_message = 'アサインメンバーは必ず入力してください'
         return render_template(
             'input.html',
             project_name=project_name,
@@ -45,33 +45,33 @@ def confirm():
         project_name=project_name,
         members=members)
 
-@app.route("/complete", methods=["POST"])
+@app.route('/complete', methods=['POST'])
 def complete():
-    print("complete post")
+    print('complete post')
     project_name = request.form.get('project_name')
     members      = request.form.get('members')
     message = f'{project_name}に{members}を追加することに成功しました'
     return render_template('complete.html', message=message)
 
 
-@app.route("/api", methods=["GET", "POST"])
+@app.route('/api', methods=['GET', 'POST'])
 def api():
     if(request.method == 'POST'):
         return render_template('api.html')
     return render_template('api.html')
 
-@app.route("/api_gcs", methods=["POST"])
+@app.route('/api_gcs', methods=['POST'])
 def api_gcs():
-    print("api_gcs post")
+    print('api_gcs post')
     bucket_name = request.form.get('bucket_name')
     if not bucket_name:
-        error_message = "バケット名は必ず入力してください"
+        error_message = 'バケット名は必ず入力してください'
         return render_template(
             'api.html',
             error_message=error_message
         )
     storage_client = storage.Client()
-    storage_client.create_bucket(f"sandbox-terunrun-dev-{bucket_name}")
+    storage_client.create_bucket(f'sandbox-terunrun-dev-{bucket_name}')
     buckets = storage_client.list_buckets()
     return render_template(
         'api.html',
@@ -97,7 +97,7 @@ file_fields = [
 #             flow = InstalledAppFlow.from_client_secrets_file(
 #                 'credentials.json', SCOPES)
 #             creds = flow.run_local_server(port=0)
-#         with open('token.json', 'w', encoding='utf-8') as token:
+#         with open('token.json', 'w', encoding='utf-8', newline='\n') as token:
 #             token.write(creds.to_json())
 #     return creds
 
@@ -115,7 +115,7 @@ def create_gws_drive(creds, drive_id, drive_name):
             # NOTE: 共有ドライブ配下のフォルダをparentsに指定する場合にTrueを設定する
             supportsAllDrives = True,
         ).execute()
-        print(f"drive: {drive}")
+        print(f'drive: {drive}')
         return drive
     except Exception as error:
         print(f'An error occurred: {error}')
@@ -123,37 +123,37 @@ def create_gws_drive(creds, drive_id, drive_name):
 
 def get_drive_contents_list(creds, drive_id):
     try:
-        service = build("drive", "v3", credentials=creds)
+        service = build('drive', 'v3', credentials=creds)
         page_token = None
         item_list = []
         while True:
             results = service.files().list(
                 # https://developers.google.com/drive/api/v3/reference/files?hl=ja
-                corpora="allDrives",
+                corpora='allDrives',
                 # driveId=drive_id,
                 includeItemsFromAllDrives=True,
                 supportsAllDrives=True,
-                q="mimeType='application/vnd.google-apps.folder'",
+                q='mimeType="application/vnd.google-apps.folder"',
                 # pageSize=10,
                 fields=f'nextPageToken, files({", ".join(file_fields)})',
                 pageToken=page_token
             ).execute()
-            items = results.get("files", [])
+            items = results.get('files', [])
             if not items:
-                print("No files found.")
+                print('No files found.')
                 return None
             for item in items:
-                if not item["trashed"]:
+                if not item['trashed']:
                     item_list.append([
-                        item["name"],
+                        item['name'],
                         # item["id"],
                         # item["createdTime"],
                         # item["modifiedTime"],
                         # item["parents"] if "parents" in item else "",
                         # item["webContentLink"] if "webContentLink" in item else "",
-                        item["webViewLink"] if 'webViewLink' in item else "",
+                        item['webViewLink'] if 'webViewLink' in item else '',
                     ])
-            page_token = results.get("nextPageToken", None)
+            page_token = results.get('nextPageToken', None)
             if page_token is None:
                 break
         # 並べ替えてヘッダーをつける
@@ -163,11 +163,11 @@ def get_drive_contents_list(creds, drive_id):
         print(f'An error occurred: {error}')
         return error
 
-@app.route("/api_gws", methods=["GET", "POST"])
+@app.route('/api_gws', methods=['GET', 'POST'])
 def api_gws():
     folder_name = session['folder_name']
     if not folder_name:
-        error_message = "フォルダ名は必ず入力してください"
+        error_message = 'フォルダ名は必ず入力してください'
         return render_template(
             'api.html',
             error_message=error_message
@@ -187,10 +187,10 @@ def api_gws():
         results=contents,
     )
 
-@app.route('/authorize', methods=["POST"])
+@app.route('/authorize', methods=['POST'])
 def authorize():
     # Create flow instance to manage the OAuth 2.0 Authorization Grant Flow steps.
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file("client_secret.json", scopes=SCOPES)
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file('client_secret.json', scopes=SCOPES)
 
     # The URI created here must exactly match one of the authorized redirect URIs
     # for the OAuth 2.0 client, which you configured in the API Console. If this
@@ -219,11 +219,11 @@ def oauth2callback():
     state = session['state']
 
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        "client_secret.json", scopes=SCOPES, state=state)
+        'client_secret.json', scopes=SCOPES, state=state)
     flow.redirect_uri = url_for('oauth2callback', _external=True)
 
     # Use the authorization server's response to fetch the OAuth 2.0 tokens.
-    authorization_response = request.url.replace("http://", "https://")
+    authorization_response = request.url.replace('http://', 'https://')
     flow.fetch_token(authorization_response=authorization_response)
 
     # Store credentials in the session.
@@ -232,7 +232,7 @@ def oauth2callback():
     credentials = flow.credentials
     session['credentials'] = credentials_to_dict(credentials)
 
-    print("oauth2callback2")
+    print('oauth2callback2')
     return redirect(url_for('api_gws'))
 
 def credentials_to_dict(credentials):
@@ -243,7 +243,7 @@ def credentials_to_dict(credentials):
             'client_secret': credentials.client_secret,
             'scopes': credentials.scopes}
 
-if __name__ == "__main__":  # pragma: no cover
+if __name__ == '__main__':  # pragma: no cover
     # When running locally, disable OAuthlib's HTTPs verification.
     # ACTION ITEM for developers:
     #     When running in production *do not* leave this option enabled.
