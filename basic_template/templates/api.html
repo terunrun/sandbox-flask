@@ -30,9 +30,11 @@
         <input type="submit" value="フォルダ作成">
     </form>
     <br/>
-    <hr/>
     {% for result in results %}
         <div>{{ result }}</div>
     {% endfor %}
+    <hr/>
+    <br/>
+    <button type="button" onclick="history.back()">戻る</button>
 </body>
 </html>

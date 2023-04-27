@@ -13,7 +13,7 @@ app.secret_key = b'{INPUT HERE}'
 @app.route('/', methods=['GET'])
 def main():
     print('/ get')
-    return redirect(url_for('input'))
+    return render_template('main.html')
 
 @app.route('/input', methods=['GET'])
 def input():
@@ -59,6 +59,7 @@ def api():
     if(request.method == 'POST'):
         return render_template('api.html')
     return render_template('api.html')
+
 
 @app.route('/api_gcs', methods=['POST'])
 def api_gcs():

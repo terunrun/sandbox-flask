@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PJ Starter | Home</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <script src="/static/js/sample.js"></script>
+</head>
+<body>
+    <hr/>
+    <form action="{{ url_for('input') }}" method="GET">
+        <input type="submit" value="画面遷移テンプレート">
+    </form>
+    <br>
+    <form action="{{ url_for('api') }}" method="GET">
+        <input type="submit" value="API実行テンプレート">
+    </form>
+</body>
+</html>

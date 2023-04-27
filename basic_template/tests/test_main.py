@@ -2,7 +2,8 @@ from main import app
 
 def test_main_route():
     response = app.test_client().get('/')
-    assert response.status_code == 302
+    assert response.status_code == 200
+    assert "画面遷移テンプレート".encode("utf-8") in response.data
 
 
 def test_input_route():
@@ -44,6 +45,7 @@ def test_complete_route():
     assert response.status_code == 200
     assert 'testにtest1,test2を追加することに成功しました'.encode("utf-8") in response.data
 
+
 def test_api_route():
     response = app.test_client().get('/api')
     assert response.status_code == 200
@@ -69,6 +71,7 @@ test_bucket = {
 #     })
 #     assert response.status_code == 200
 #     assert 'cloud-storage-test-bucket'.encode("utf-8") in response.data
+
 
 def test_api_gcs_route_empty_bucket_name():
     response = app.test_client().post('/api_gcs', data={
@@ -109,6 +112,7 @@ def test_api_gws_route(mocker):
         assert response.status_code == 200
         assert 'gws-test-folder'.encode("utf-8") in response.data
         assert 'gws-test-folder2'.encode("utf-8") in response.data
+
 
 def test_api_gws_route_empty_foleder_name():
     with app.test_client() as client:
