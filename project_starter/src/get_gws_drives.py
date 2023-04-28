@@ -14,7 +14,7 @@ def get_gws_drives(creds):
             pageToken=page_token,
             # q='organizerCount != 0',
             useDomainAdminAccess=True,
-            fields=f'drives({", ".join("*")})',
+            fields=f'nextPageToken, drives({", ".join("*")})',
         ).execute()
         items = results.get('drives', [])
         for item in items:
@@ -30,7 +30,7 @@ def get_gws_drives(creds):
     # # 並べ替えてヘッダーをつける
     item_list_sorted = sorted(item_list, key=lambda x: (x[0], x[1]))
     item_list_sorted.insert(0, ['name', 'id', 'createdTime'])
-    with open(f'shared_drives_list', 'w', encoding='utf-8') as drives_list:
+    with open(f'shared_drives_list', 'w', encoding='utf-8', newline='\n') as drives_list:
         writer = csv.writer(drives_list)
         writer.writerows(item_list_sorted)
     return f'shared_drives_list.csv'

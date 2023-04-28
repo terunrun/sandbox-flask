@@ -1,15 +1,6 @@
 import csv
-import sys
 
 from google.cloud import resourcemanager_v3
-
-SCOPES = [
-    'https://www.googleapis.com/auth/cloud-platform',
-]
-
-# 実行時引数として組織IDを受け取る
-args = sys.argv
-ORGANIZATION_ID = args[1]
 
 
 def get_folder(folder_client, folders_list, all_folders_list):
@@ -77,11 +68,7 @@ def get_google_cloud_projects(organization_id):
     # 並べ替えてヘッダーをつける
     item_list_sorted = sorted(item_list, key=lambda x: (x[0], x[1], x[2]))
     item_list_sorted.insert(0, ['organization', 'folder', 'project_id', 'project_name', 'created_time', 'update_time', 'state'])
-    with open(f'projects_list_{organization_id}.csv', 'w', encoding='utf-8') as projects_list:
+    with open(f'projects_list_{organization_id}.csv', 'w', encoding='utf-8', newline='\n') as projects_list:
         writer = csv.writer(projects_list)
         writer.writerows(item_list_sorted)
     return f'projects_list_{organization_id}.csv'
-
-
-if __name__ == '__main__':
-    get_google_cloud_projects(ORGANIZATION_ID)
